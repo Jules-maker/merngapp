@@ -1,7 +1,9 @@
 //args fait ref à registerInput: RegisterInput dans typeDefs
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
+const { UserInputError } = require('apollo-server');
 
+const { validateRegisterInput } = require('../../util/validators')
 const { SECRET_KEY  } = require('../../config')
 const User = require('../../models/User');
 
@@ -12,11 +14,23 @@ module.exports = {
             { 
                 registerInput: { username, email, password, confirmPassword }
             },
-            context,
-            info
+           
             ) {
             //TODO: Validate user data
-            //TODO: s'assurer que l'utilisateur n'existe pas déjà
+            const { valid, errors } = validateRegisterInput(username, email, password, confirmPassword);
+            if(!valid){
+                throw new UserInputError('Errors', { errors });
+            }
+            // s'assurer que l'utilisateur n'existe pas déjà
+                const user = await User.findOne({ username });
+                if(user) {
+/*On pourrait utiliser throw err mais on peut générer un type d'erreur interprété par graphql*/
+                    throw new UserInputError('Username is taken', {
+                        errors: { /*username = key */
+                            username: 'This username is taken'
+                        }
+                    })
+                }
             //TODO: hash le password et créer un token d'authentification
                 password = await bcrypt.hash(password, 12);
                 // on crée l'objet user
