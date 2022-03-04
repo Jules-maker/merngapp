@@ -20,14 +20,3 @@ mongoose.connect(MONGODB, { useNewUrlParser: true })
     .then(res => {
         console.log(`Server running at ${res.url}`);
     })
-/* const token = generateToken(user) on genere un token pour user 
-
- if (user) {
-                /*On pourrait utiliser throw err mais on peut générer un type d'erreur interprété par graphql
-                throw new UserInputError('Username is taken', {
-                    errors: { /*username = key 
-                        username: 'This username is taken'
-                    }
-                })
-            }*/
-            /*const res = await newUser.save();to the DB*/

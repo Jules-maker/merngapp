@@ -70,7 +70,7 @@ module.exports = {
       }
       // TODO: Make sure user doesnt already exist
       const user = await User.findOne({ username });
-      if (user) {
+      if (user) { /*username = key */
         throw new UserInputError('Username is taken', {
           errors: {
             username: 'This username is taken'
@@ -87,7 +87,7 @@ module.exports = {
         createdAt: new Date().toISOString()
       });
 
-      const res = await newUser.save();
+      const res = await newUser.save(); /* dans la db */
 
       const token = generateToken(res);
 
