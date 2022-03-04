@@ -1,36 +1,11 @@
 const { ApolloServer } = require('apollo-server');
-const gql = require('graphql-tag');
 const mongoose = require('mongoose');
 
-const Post = require('./models/Post');
+const typeDefs = require('./graphql/typeDefs')
+const resolvers = require('./graphql/resolvers')
 const { MONGODB } = require('./config.js');
 
-const typeDefs = gql`
-    type Post {
-        id: ID!
-        body: String!
-        createdAt: String!
-        username: String !
-    }
-    type Query {
-        getPosts: [Post]
-    }
-`;
 
-const resolvers = {
-    Query: {
-
-        async getPosts() {
-            try {
-                const posts = await Post.find();//find vide prends tout
-                return posts;
-            } catch(err) {
-                throw new Error(err);
-            }
-            
-        }
-    }
-};
 
 const server = new ApolloServer({
     typeDefs,
@@ -45,3 +20,14 @@ mongoose.connect(MONGODB, { useNewUrlParser: true })
     .then(res => {
         console.log(`Server running at ${res.url}`);
     })
+/* const token = generateToken(user) on genere un token pour user 
+
+ if (user) {
+                /*On pourrait utiliser throw err mais on peut générer un type d'erreur interprété par graphql
+                throw new UserInputError('Username is taken', {
+                    errors: { /*username = key 
+                        username: 'This username is taken'
+                    }
+                })
+            }*/
+            /*const res = await newUser.save();to the DB*/
