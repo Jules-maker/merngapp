@@ -1,4 +1,3 @@
-//args fait ref à registerInput: RegisterInput dans typeDefs
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const { UserInputError } = require('apollo-server');
@@ -68,9 +67,9 @@ module.exports = {
       if (!valid) {
         throw new UserInputError('Errors', { errors });
       }
-      // TODO: Make sure user doesnt already exist
+      
       const user = await User.findOne({ username });
-      if (user) { /*username = key */
+      if (user) {
         throw new UserInputError('Username is taken', {
           errors: {
             username: 'This username is taken'
@@ -87,7 +86,7 @@ module.exports = {
         createdAt: new Date().toISOString()
       });
 
-      const res = await newUser.save(); /* dans la db */
+      const res = await newUser.save();
 
       const token = generateToken(res);
 
